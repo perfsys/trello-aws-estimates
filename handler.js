@@ -8,12 +8,19 @@ const TRELLO_KEY = process.env.TRELLO_KEY
 const TRELLO_TOKEN = process.env.TRELLO_TOKEN
 const TRELLO_MEMBER = process.env.TRELLO_MEMBER
 
+console.log(`TRELLO_KEY: ${TRELLO_KEY}`)
+console.log(`TRELLO_TOKEN: ${TRELLO_TOKEN}`)
+console.log(`TRELLO_MEMBER: ${TRELLO_MEMBER}`)
+
 const trello = new Trello(TRELLO_KEY, TRELLO_TOKEN);
 
 const runEstimationPerList = async (fields) => {
     try {
         const {id, name} = fields
         const cards = await trello.getCardsForList(id)
+        if (!Array.isArray(cards)){
+            throw new Error(cards);
+        }
         let nameTitle = name
 
         const nameMatch = name.match(/\(\d{1,2}\/\d{1,2}\)/)
@@ -75,11 +82,39 @@ const runEstimationPerList = async (fields) => {
 
 }
 
+const updateListTitle = async (fields) =>{
+    try {
+
+        const {id,nameTitle,sum} = fields
+
+        if (id && sum && nameTitle) {
+            const {actual, planned} = sum
+
+            if (actual && planned){
+                console.log(`Going to update list: ${id} ${nameTitle}`)
+
+                await trello.renameList(id, `(${actual}/${planned}) ${nameTitle}`)
+            } else {
+                await trello.renameList(id, `${nameTitle}`)
+            }
+        }
+
+
+    } catch (e) {
+        console.error(e)
+        return e
+    }
+}
+
 const runEstimationPerBoard = async (fields) =>{
     try {
 
         const {id} =fields
         const boardLists = await trello.getListsOnBoard(id)
+
+        if (!Array.isArray(boardLists)){
+            throw new Error(boardLists);
+        }
 
         const boardListsFields = R.map((o) => {
             return {
@@ -89,11 +124,13 @@ const runEstimationPerBoard = async (fields) =>{
         }, boardLists)
 
 
-        const results = await Promise.all(R.map(runEstimationPerList, boardListsFields))
+        const runEstimationPerListResult = await Promise.all(R.map(runEstimationPerList, boardListsFields))
+
+        await Promise.all(R.map(updateListTitle, runEstimationPerListResult))
 
         return {
             ...fields,
-            results
+            results: runEstimationPerListResult
         }
 
     } catch (e) {

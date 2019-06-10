@@ -21,3 +21,9 @@ functions:
 #          path: hello-world
 #          method: get
 #          cors: true
+    events:
+      - schedule:
+          name: perfsys-trello-aws-estimates-runEstimates-rate-event
+          description: 'perfsys-trello-aws-estimates-runEstimates-rate-event'
+          rate: rate(15 minutes)
+          enabled: true
