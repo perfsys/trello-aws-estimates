@@ -1,0 +1,27 @@
+{
+  "name": "perfsys_trello_aws_estimates",
+  "version": "1.0.0",
+  "description": "AWS Serverless function to calculate actual and planned estimates and update List name",
+  "main": "handler.js",
+  "dependencies": {
+    "ramda": "^0.26.1",
+    "trello": "^0.9.1"
+  },
+  "devDependencies": {
+    "eslint": "^5.16.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "AWS",
+    "cloud",
+    "serverless",
+    "Trello",
+    "estimates",
+    "actual",
+    "planned"
+  ],
+  "author": "company@perfsys.net",
+  "license": "ISC"
+}

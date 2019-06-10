@@ -1,0 +1,23 @@
+
+service: perfsys-trello-aws-estimates
+
+# The `provider` block defines where your service will be deployed
+provider:
+  name: aws
+  runtime: nodejs10.x
+
+  environment:
+    TRELLO_KEY: 'TRELLO_KEY'
+    TRELLO_TOKEN: 'TRELLO_TOKEN'
+    TRELLO_MEMBER: 'TRELLO_MEMBER'
+
+# The `functions` block defines what code to deploy
+functions:
+  runEstimates:
+    handler: handler.runEstimates
+    # The `events` block defines how to trigger the handler.helloWorld code
+#    events:
+#      - http:
+#          path: hello-world
+#          method: get
+#          cors: true
