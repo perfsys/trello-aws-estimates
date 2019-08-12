@@ -23,7 +23,7 @@ const runEstimationPerList = async (fields) => {
         }
         let nameTitle = name
 
-        const nameMatch = name.match(/\(\d{1,2}\/\d{1,2}\)/)
+        const nameMatch = name.match(/\(\d{1,3}\/\d{1,3}\)/)
         if (nameMatch){
             nameTitle = name.replace(nameMatch,'')
         }
